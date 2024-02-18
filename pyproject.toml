@@ -1,0 +1,44 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+	"setuptools>=61",
+	"wheel",
+	"build",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["tpy357"]
+
+[project]
+name = "tpy357"
+authors = [
+	{name = "Alex Pacini", email = "alexpacini90@gmail.com"},
+]
+# license = {text = "GPLv3"}
+description = "ThermoPro TP357 Bluetooth Python Library"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+	"bleak",
+	"tomli",
+	"pandas",
+	"matplotlib",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+	"Intended Audience :: Developers",
+	"Natural Language :: English",
+]
+dynamic = [
+	"version",
+]
+
+# [project.urls]
+# Documentation = ""
+
+[tool.setuptools.dynamic]
+version = {attr = "tpy357.__version__"}
+
+[project.scripts]
+tpy357 = "tpy357.cli:main"

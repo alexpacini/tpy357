@@ -1,0 +1,14 @@
+[Unit]
+Description=Telegram TP357 bot using tpy357
+After=network.target
+
+[Service]
+Type=idle
+User=pi
+
+ExecStart=/home/pi/tpy357/.venv/bin/python3 /home/pi/tpy357/telegram-bot/bot.py 2>&1
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
