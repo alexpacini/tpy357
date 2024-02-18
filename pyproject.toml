@@ -34,8 +34,9 @@ dynamic = [
 	"version",
 ]
 
-# [project.urls]
-# Documentation = ""
+[project.urls]
+Homepage = "https://gitlab.com/alexpacini/tpy357"
+Issues = "https://gitlab.com/alexpacini/tpy357/-/issues"
 
 [tool.setuptools.dynamic]
 version = {attr = "tpy357.__version__"}
