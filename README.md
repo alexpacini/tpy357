@@ -191,5 +191,7 @@ This project is not related or endorsed with ThermoPro brand, and the protocol w
 by reverse-engineering through "packet sniffing" and/or resources publicly available.
 
 ## Changelog
+### v1.1.0 (023.02.2024)
+* Fix battery level indication for advertising packets.
 ### v1.0.0 (04.02.2024)
 * First release.

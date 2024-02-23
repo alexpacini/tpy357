@@ -13,7 +13,7 @@ from bleak.exc import BleakError
 
 __author__ = """Alex Pacini"""
 __email__ = "alexpacini90@gmail.com"
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.addHandler(
@@ -83,7 +83,7 @@ async def scan_tp357(stop_evt: asyncio.Event, queue: asyncio.Queue):
             for k, v in advertising_data.manufacturer_data.items():
                 raw = struct.pack("<H4s", k, v)
                 t_now = datetime.datetime.now()
-                temp_100mdC, hum_rh, volt = struct.unpack("=hBH", raw[1:6])
+                temp_100mdC, hum_rh, batt_level = struct.unpack("=hBB", raw[1:5])
                 if temp_100mdC > 1024 or hum_rh > 100:
                     continue
                 data = dict(
@@ -92,8 +92,7 @@ async def scan_tp357(stop_evt: asyncio.Event, queue: asyncio.Queue):
                     rssi=advertising_data.rssi,
                     hum_rh=hum_rh,
                     temp=temp_100mdC / 10,
-                    batt_v=volt
-                    / 10000,  #  Not sure of this parameter, as it never changed...
+                    batt_lv=f"{batt_level/2*100:.0f}%",
                 )
                 queue.put_nowait(data)
 
@@ -112,7 +111,7 @@ async def query_tp357(dev, mode: str):
         eg. `bleak.BleakScanner.find_device_by_address`.
     mode : `str`
         The mode of query. One of 'day', 'week', 'year'.
-    
+
     Returns
     --------
     data : `list(dict)
@@ -147,11 +146,11 @@ async def query_tp357(dev, mode: str):
                 return
             if data[0] != cmd[0]:
                 return
-            t_raw = struct.unpack("h", data[1:3])[0]
+            raw = struct.unpack("h", data[1:3])[0]
             # flag = data[3]
             for i in range(5):
                 ofs = 4 + i * 3
-                t_a = t0 + (5 * (t_raw - 1) + i) * td
+                t_a = t0 + (5 * (raw - 1) + i) * td
                 temp_100mdC = struct.unpack("h", data[ofs : ofs + 2])[0]
                 hum_rh = data[ofs + 2]
                 if temp_100mdC > 1024 or hum_rh > 100:
